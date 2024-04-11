@@ -3,10 +3,11 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 
 interface MemoProps {
 	defaultPosition: { x: number; y: number };
+	onClick: () => void;
 }
 
-const Memo: React.FC<MemoProps> = ({ defaultPosition }) => {
-	const nodeRef = useRef<HTMLDivElement>(null);
+const Memo: React.FC<MemoProps> = ({ defaultPosition, onClick }) => {
+	const nodeRef = useRef(null);
 	const [position, setPosition] = useState<{ x: number; y: number }>(
 		defaultPosition
 	);
@@ -17,21 +18,27 @@ const Memo: React.FC<MemoProps> = ({ defaultPosition }) => {
 	};
 
 	return (
-		<>
-			<Draggable
-				nodeRef={nodeRef}
-				defaultPosition={defaultPosition}
-				onStop={handleDrag}
+		<Draggable
+			nodeRef={nodeRef}
+			defaultPosition={defaultPosition}
+			onStop={handleDrag}
+			onMouseDown={onClick}
+			handle="#handle"
+		>
+			<div
+				ref={nodeRef}
+				className="absolute bg-yellow-100 border border-black group"
 			>
 				<div
-					ref={nodeRef}
-					className="border border-black p-3 absolute bg-yellow-100 cursor-move"
-				>
-					<h2>Memo</h2>
-					<p>Drag me around!</p>
+					id="handle"
+					className="transition-all duration-100 cursor-move bg-amber-300 group-hover:py-2"
+				></div>
+				<div className="p-2">
+					<h2>title</h2>
+					<p>description</p>
 				</div>
-			</Draggable>
-		</>
+			</div>
+		</Draggable>
 	);
 };
 
