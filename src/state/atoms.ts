@@ -1,4 +1,5 @@
 import { atom, useAtomValue } from 'jotai';
+import { isEqual } from 'lodash';
 import { useMemo } from 'react';
 
 interface Position {
@@ -6,7 +7,7 @@ interface Position {
 	y: number;
 }
 
-interface Note {
+export interface Note {
 	id: number;
 	content?: string;
 	position?: Position;
@@ -32,16 +33,25 @@ export const useNoteAtom = (id: number) => {
 	return note;
 };
 
+export const moveNoteAtom = atom(null, (get, set, id: number) => {
+	const notes = get(notesAtom);
+	const noteIndex = notes.findIndex((note) => note.id === id);
+	if (notes.length - 1 === noteIndex) return;
+	const newNotes = [...notes];
+	const [clickedNote] = newNotes.splice(noteIndex, 1);
+	set(notesAtom, [...newNotes, clickedNote]);
+});
+
 export const updateNoteAtom = atom(
 	null,
 	(get, set, { id, content, position }: Note) => {
 		const notes = get(notesAtom);
 		const noteIndex = notes.findIndex((note) => note.id === id);
 
-		if (noteIndex === -1) {
-			console.warn(`Note with id ${id} not found.`);
-			return;
-		}
+		if (noteIndex === -1) return;
+		const contentUnchanged = notes[noteIndex].content === content;
+		const positionUnchanged = isEqual(notes[noteIndex].position, position);
+		if (contentUnchanged || positionUnchanged) return;
 
 		const updatedNote = {
 			...notes[noteIndex],

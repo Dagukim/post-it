@@ -5,8 +5,8 @@ interface ActionButtonProps {
 	name: string;
 	className: string;
 	icon: IconDefinition;
-	onClick: () => void;
-	size?: SizeProp;
+	onClick: React.MouseEventHandler;
+	iconSize?: SizeProp;
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({
@@ -14,7 +14,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 	className,
 	icon,
 	onClick,
-	size
+	iconSize
 }) => {
 	return (
 		<button
@@ -25,7 +25,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 			<FontAwesomeIcon
 				className="block"
 				icon={icon}
-				size={size ?? 'sm'}
+				size={iconSize ?? 'sm'}
 			/>
 		</button>
 	);

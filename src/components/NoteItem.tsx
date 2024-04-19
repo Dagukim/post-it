@@ -1,62 +1,70 @@
 import { useAtom } from 'jotai';
-import React, { useRef, useState } from 'react';
-import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+import React, { useCallback, useState } from 'react';
+import { DraggableData, DraggableEvent } from 'react-draggable';
 import NoteItemView from '@/components/NoteItemView';
-import { deleteNoteAtom, updateNoteAtom, useNoteAtom } from '@/state/atoms';
+import {
+	deleteNoteAtom,
+	moveNoteAtom,
+	updateNoteAtom,
+	useNoteAtom
+} from '@/state/atoms';
 
 interface NoteItemProps {
 	id: number;
 }
 
 const NoteItem: React.FC<NoteItemProps> = React.memo(({ id }) => {
-	const nodeRef = useRef<HTMLDivElement>(null);
 	const note = useNoteAtom(id);
+	const [, moveNoteToTop] = useAtom(moveNoteAtom);
 	const [, updateNote] = useAtom(updateNoteAtom);
 	const [, deleteNote] = useAtom(deleteNoteAtom);
 	const [isEdit, setEdit] = useState<boolean>(false);
 
-	const handleDrag = (_e: DraggableEvent, data: DraggableData) => {
-		const { x, y } = data;
-		const newPosition = { x, y };
-		updateNote({ id, position: newPosition });
-	};
+	const handleNoteClick = useCallback(() => {
+		moveNoteToTop(id);
+	}, [id, moveNoteToTop]);
 
-	const handleDelete = () => {
+	const handleDragStop = useCallback(
+		(_e: DraggableEvent, data: DraggableData) => {
+			const { x, y } = data;
+			const newPosition = { x, y };
+			updateNote({ id, position: newPosition });
+		},
+		[id, updateNote]
+	);
+
+	const handleDelete = useCallback(() => {
 		const ok = confirm('Are you sure you want to delete it?');
 		if (!ok) return;
 		deleteNote(id);
 		console.log(`It's been deleted`);
-	};
+	}, [id, deleteNote]);
 
-	const toggleEdit = () => {
+	const toggleEdit = useCallback(() => {
 		setEdit(true);
-	};
+	}, []);
 
-	const updateNoteContent = (content: string) => {
-		updateNote({ id, content });
-		setEdit(false);
-	};
+	const updateNoteContent = useCallback(
+		(content: string) => {
+			updateNote({ id, content });
+			setEdit(false);
+		},
+		[id, updateNote]
+	);
 
 	const NoteItemViewProps = {
-		ref: nodeRef,
 		isEdit,
-		content: note?.content,
-		editNote: toggleEdit,
-		saveNote: updateNoteContent,
-		deleteNote: handleDelete
+		data: note,
+		noteAction: {
+			editNote: toggleEdit,
+			saveNote: updateNoteContent,
+			deleteNote: handleDelete,
+			dragStop: handleDragStop,
+			clickNote: handleNoteClick
+		}
 	};
 
-	return (
-		<Draggable
-			nodeRef={nodeRef}
-			onStop={handleDrag}
-			handle="#handle"
-			bounds="parent"
-			defaultPosition={note?.position}
-		>
-			<NoteItemView {...NoteItemViewProps} />
-		</Draggable>
-	);
+	return <NoteItemView {...NoteItemViewProps} />;
 });
 
 NoteItem.displayName = 'NoteItem';
