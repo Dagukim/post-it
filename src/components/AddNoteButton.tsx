@@ -1,9 +1,6 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-interface AddNoteButtonProps {
-	onClick: React.MouseEventHandler;
-}
+import { AddNoteButtonProps } from '@/types';
 
 const AddNoteButton: React.FC<AddNoteButtonProps> = ({ onClick }) => {
 	return (

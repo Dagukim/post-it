@@ -1,19 +1,10 @@
 import { atom, useAtomValue } from 'jotai';
 import { isEqual } from 'lodash';
 import { useMemo } from 'react';
+import { Note } from '@/types';
+import { loadNotes, saveNotes } from '@/utils/storage';
 
-interface Position {
-	x: number;
-	y: number;
-}
-
-export interface Note {
-	id: number;
-	content?: string;
-	position?: Position;
-}
-
-export const notesAtom = atom<Note[]>([]);
+export const notesAtom = atom<Note[]>(loadNotes());
 
 export const addNoteAtom = atom(null, (get, set) => {
 	const newNote: Note = {
@@ -21,7 +12,9 @@ export const addNoteAtom = atom(null, (get, set) => {
 		content: '',
 		position: { x: 100, y: 100 }
 	};
-	set(notesAtom, [...get(notesAtom), newNote]);
+	const updatedNotes = [...get(notesAtom), newNote];
+	set(notesAtom, updatedNotes);
+	saveNotes(updatedNotes);
 });
 
 const noteAtom = (id: number) =>
@@ -36,10 +29,12 @@ export const useNoteAtom = (id: number) => {
 export const moveNoteAtom = atom(null, (get, set, id: number) => {
 	const notes = get(notesAtom);
 	const noteIndex = notes.findIndex((note) => note.id === id);
-	if (notes.length - 1 === noteIndex) return;
-	const newNotes = [...notes];
-	const [clickedNote] = newNotes.splice(noteIndex, 1);
-	set(notesAtom, [...newNotes, clickedNote]);
+	if (noteIndex === -1 || notes.length - 1 === noteIndex) return;
+	const cpNotes = [...notes];
+	const [clickedNote] = cpNotes.splice(noteIndex, 1);
+	const updatedNotes = [...cpNotes, clickedNote];
+	set(notesAtom, updatedNotes);
+	saveNotes(updatedNotes);
 });
 
 export const updateNoteAtom = atom(
@@ -63,10 +58,12 @@ export const updateNoteAtom = atom(
 		updatedNotes[noteIndex] = updatedNote;
 
 		set(notesAtom, updatedNotes);
+		saveNotes(updatedNotes);
 	}
 );
 
 export const deleteNoteAtom = atom(null, (get, set, id: number) => {
 	const updatedNotes = get(notesAtom).filter((note) => note.id !== id);
 	set(notesAtom, updatedNotes);
+	saveNotes(updatedNotes);
 });

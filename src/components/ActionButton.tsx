@@ -1,13 +1,5 @@
-import { IconDefinition, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-interface ActionButtonProps {
-	name: string;
-	className: string;
-	icon: IconDefinition;
-	onClick: React.MouseEventHandler;
-	iconSize?: SizeProp;
-}
+import { ActionButtonProps } from '@/types';
 
 const ActionButton: React.FC<ActionButtonProps> = ({
 	name,

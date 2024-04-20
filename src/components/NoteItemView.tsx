@@ -1,21 +1,9 @@
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import React, { MouseEventHandler, useRef } from 'react';
-import Draggable, { DraggableEventHandler } from 'react-draggable';
+import React, { useRef } from 'react';
+import Draggable from 'react-draggable';
 import ActionButton from '@/components/ActionButton';
 import TextEditArea from '@/components/TextEditArea';
-import { Note } from '@/state/atoms';
-
-interface NoteItemViewProps {
-	isEdit: boolean;
-	data?: Note;
-	noteAction: {
-		editNote: MouseEventHandler;
-		saveNote: (content: string) => void;
-		deleteNote: MouseEventHandler;
-		dragStop: DraggableEventHandler;
-		clickNote: (e: MouseEvent) => void;
-	};
-}
+import { NoteItemViewProps } from '@/types';
 
 const NoteItemView: React.FC<NoteItemViewProps> = React.memo(
 	({ isEdit, data, noteAction }) => {
@@ -57,7 +45,7 @@ const NoteItemView: React.FC<NoteItemViewProps> = React.memo(
 								onClick={noteAction.editNote}
 								icon={faPen}
 							/>
-							<p className="flex-1 w-full p-2 overflow-auto break-words whitespace-pre-wrap text-ellipsis">
+							<p className="flex-1 w-full p-2 overflow-auto break-words whitespace-pre-wrap">
 								{data?.content}
 							</p>
 						</>

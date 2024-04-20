@@ -8,10 +8,7 @@ import {
 	updateNoteAtom,
 	useNoteAtom
 } from '@/state/atoms';
-
-interface NoteItemProps {
-	id: number;
-}
+import { NoteItemProps } from '@/types';
 
 const NoteItem: React.FC<NoteItemProps> = React.memo(({ id }) => {
 	const note = useNoteAtom(id);
