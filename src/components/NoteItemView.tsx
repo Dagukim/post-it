@@ -20,11 +20,11 @@ const NoteItemView: React.FC<NoteItemViewProps> = React.memo(
 			>
 				<div
 					ref={nodeRef}
-					className="absolute flex flex-col overflow-x-auto overflow-y-hidden bg-yellow-100 rounded-[4px] shadow-md resize max-w-80 min-w-48 min-h-28 group"
+					className="absolute flex flex-col overflow-hidden bg-yellow-100 rounded-[4px] shadow-md resize max-w-80 min-w-48 min-h-28 group"
 				>
 					<div
 						id="handle"
-						className="flex-none p-2 cursor-move h-7 bg-amber-300"
+						className="flex-none cursor-move bg-amber-300 h-7"
 					/>
 					<ActionButton
 						className="top-2 right-2"
@@ -45,7 +45,7 @@ const NoteItemView: React.FC<NoteItemViewProps> = React.memo(
 								onClick={noteAction.editNote}
 								icon={faPen}
 							/>
-							<p className="flex-1 w-full p-2 overflow-auto break-words whitespace-pre-wrap">
+							<p className="flex-grow p-2 overflow-y-auto break-words whitespace-pre-wrap">
 								{data?.content}
 							</p>
 						</>
