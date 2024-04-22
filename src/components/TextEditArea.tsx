@@ -5,7 +5,7 @@ const TextEditArea: React.FC<TextEditAreaProps> = ({ onBlur, text }) => {
 	return (
 		<ReactTextareaAutosize
 			className="flex-grow w-full p-2 overflow-auto bg-transparent outline-none resize-none"
-			onBlur={(e) => onBlur(e.target.value)}
+			onBlur={onBlur}
 			cols={50}
 			placeholder="Type your memo here..."
 			defaultValue={text}

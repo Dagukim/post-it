@@ -42,7 +42,8 @@ const NoteItem: React.FC<NoteItemProps> = React.memo(({ id }) => {
 	}, []);
 
 	const updateNoteContent = useCallback(
-		(content: string) => {
+		(e: React.FocusEvent<HTMLTextAreaElement>) => {
+			const content = e.target.value;
 			updateNote({ id, content });
 			setEdit(false);
 		},

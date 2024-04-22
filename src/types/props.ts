@@ -11,7 +11,7 @@ export interface NoteItemViewProps {
 	data?: Note;
 	noteAction: {
 		editNote: React.MouseEventHandler;
-		saveNote: (content: string) => void;
+		saveNote: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 		deleteNote: React.MouseEventHandler;
 		dragStop: DraggableEventHandler;
 		clickNote: (e: MouseEvent) => void;
@@ -31,6 +31,6 @@ export interface ActionButtonProps {
 }
 
 export interface TextEditAreaProps {
-	onBlur: (content: string) => void;
+	onBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 	text?: string;
 }
